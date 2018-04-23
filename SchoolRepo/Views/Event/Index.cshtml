@@ -1,0 +1,74 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<h2>Events</h2>
+<div id="calendar"></div>
+
+
+
+<link href='~/calendar/fullcalendar.min.css' rel='stylesheet' />
+<link href='~/calendar/fullcalendar.print.min.css' rel='stylesheet' media='print' />
+
+@section Scripts{
+
+    <script src='~/calendar/moment.min.js'></script>
+    <!--<script src='~/calendar/jquery.min.js'></script>-->
+    <script src='~/calendar/fullcalendar.min.js'></script>
+
+
+    <script>
+        $(document).ready(function () {
+            var events = [];
+            $.ajax({
+                type: "GET",
+                url: "/Event/PostEvent",
+                success: function (data) {
+                    $.each(data, function (i, v) {
+                        events.push({
+                            title: v.title,
+                            start: v.start,
+                            end: v.end,
+                        });
+                    })
+                    CreateCalender(events);
+
+                },
+                error: function (error) {
+                    alert('failed');
+                }
+
+            })
+
+
+
+            function CreateCalender(events) {
+
+                $('#calendar').fullCalendar('destroy');
+                $('#calendar').fullCalendar({
+                    contentHeight: 400,
+                    defaultDate: new Date(),
+                    timeFormat: 'h(:mm)a',
+                    header: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'month,basicWeek,basicDay,agenda'
+                    },
+                    navLinks: true, // can click day/week names to navigate views
+                    editable: true,
+                    eventLimit: true, // allow "more" link when too many events
+                    events: events,
+
+                })
+            }
+
+        })
+    </script>
+
+}
+
+
+
+

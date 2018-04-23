@@ -1,0 +1,19 @@
+﻿@model IList<SchoolRepo.Models.Student>
+
+@{
+    ViewBag.Title = "Remove";
+}
+
+<h1>Remove Students</h1>
+
+<form asp-controller="Student" asp-action="Remove" method="post">
+    
+    @foreach (var student in Model)
+    {
+        <input type="checkbox" id="@student.ID" name="studentIDs" value="@student.ID"/>
+        <label for="@student.ID">@student.Name</label><br />
+    }
+    <input type="submit" value="Delete" class="btn-primary"/>
+
+    
+</form>

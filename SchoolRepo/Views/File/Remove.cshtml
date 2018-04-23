@@ -1,0 +1,19 @@
+﻿@model IList<SchoolRepo.Models.File>
+
+@{
+    ViewBag.Title = "Remove File";
+}
+
+
+<h1>Delete File</h1>
+
+<form asp-controller="File" asp-action="Remove" method="post">
+    @foreach(var file in Model)
+    {
+        <input type="checkbox" id="@file.ID" name="fileIDs" value="@file.ID" />
+        <label for="@file.ID">@file.FileName</label><br />
+
+    }
+    <input type="submit" value="Delete" class="btn-primary" />
+
+</form>

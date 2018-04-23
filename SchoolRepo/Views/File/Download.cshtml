@@ -1,0 +1,20 @@
+﻿
+@model IList<SchoolRepo.Models.File>
+
+@{
+    ViewBag.Title = "Add Student";
+}
+
+<p>List of Files</p>
+
+<ul>
+    @foreach (var item in Model)
+    {
+        <li>
+            <a asp-controller="File" asp-action="Download"
+               asp-route-filename="@item.FileName">
+                @item.FileName
+            </a>
+        </li>
+    }
+</ul>

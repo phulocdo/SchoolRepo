@@ -1,0 +1,19 @@
+﻿@model List<SchoolRepo.Models.Grade>;
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Grade</h2>
+
+<a asp-controller="Grade" asp-action="Add">Add</a>
+
+<ul>
+    @foreach (var grade in Model)
+    {
+        <li>@grade.Level</li>
+
+    }
+
+</ul>
+

@@ -1,0 +1,18 @@
+﻿@model List<SchoolRepo.Models.Student>
+@{
+    ViewBag.Title = "Add Student";
+}
+
+<h1>Student List</h1>
+
+<p><a asp-controller="Student" asp-action="Add">Add</a> |
+    <a asp-controller="Student" asp-action="Remove">Delete</a>
+</p>
+<ul>
+    @foreach(var student in Model)
+    {
+        <li>@student.ID, @student.Name</li>
+    }
+    
+</ul>
+

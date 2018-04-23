@@ -1,0 +1,26 @@
+﻿@model IList<SchoolRepo.Models.File>
+@{
+    ViewBag.Title = "File";
+}
+
+<h1>Files</h1>
+
+@if(Model.Count == 0)
+{
+    <p>No file uploaded yet</p>
+
+}
+
+   <ul>
+
+        @foreach (var file in Model)
+        {
+            //var link = Url.Content(file.FilePath) +  file.FileName.Replace(" ", "%20");
+            
+               <li><a asp-controller="File" asp-action="Download" asp-route-filename="@file.FileName">@file.FileName</a></li>
+              
+            
+        }
+
+</ul>   
+    

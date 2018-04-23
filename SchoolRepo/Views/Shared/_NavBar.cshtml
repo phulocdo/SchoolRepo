@@ -1,0 +1,43 @@
+﻿
+
+
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a asp-area="" asp-controller="Event" asp-action="Index" class="navbar-brand">SchoolRepo</a>
+        </div>
+
+        @if (ViewBag.Name != null)
+        {
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">@ViewBag.Name<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+
+                        <li><a asp-area="" asp-controller="Event" asp-action="Index">Events</a></li>
+                        <li><a asp-area="" asp-controller="File" asp-action="index" asp-route-studentID="@ViewBag.ID">Files</a></li>
+                        <li><a asp-area="" asp-controller="User" asp-action="login">Logout</a></li>
+
+                    </ul>
+                </li>
+            </ul>
+        }
+        else
+        {
+            <ul class="nav navbar-nav navbar-right">
+                <li><a asp-area="" asp-controller="User" asp-action="Login">Login</a></li>
+                <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
+                <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+            </ul>
+
+
+        }
+    </div>
+</nav>
