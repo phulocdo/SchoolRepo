@@ -24,7 +24,7 @@
             var events = [];
             $.ajax({
                 type: "GET",
-                url: "/Event/PostEvent",
+                url: "/Event/PostEvent?grade=@ViewBag.gradeID",
                 success: function (data) {
                     $.each(data, function (i, v) {
                         events.push({

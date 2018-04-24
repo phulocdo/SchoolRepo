@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SchoolRepo.Data;
 using SchoolRepo.Models;
 using SchoolRepo.ViewModels;
@@ -18,9 +19,18 @@ namespace SchoolRepo.Controllers
             context = dbContext;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int studentID)
         {
-            //List<Event> events = dbContext.Events.ToList();
+            if(studentID != 0)
+            {
+                User user = context.Users.Single(s => s.ID == studentID);
+                ViewBag.Name = user.Name;
+                Grade grade = context.Grades.First(g => g.Level == user.Grade);
+                ViewBag.gradeID = grade.ID;
+                ViewBag.ID = studentID;
+            }
+            
+
             return View();
         }
 
@@ -56,10 +66,16 @@ namespace SchoolRepo.Controllers
             return View(eventViewModels); // if failed validation, reprompt the Add event form
         }
 
-        public IActionResult PostEvent()
+        public IActionResult PostEvent(int grade)
         {
-
             var events = context.Events.ToList();
+
+
+            if (grade != 0)
+            {
+                events = context.Events.Where(s => s.GradeID == grade).ToList();
+            }
+           
             //var events = new List<Dictionary<string, string>>();
             //events.Add(new Dictionary<string, string>() { { "Title", "Epic story" }, {"Start","2018-04-18" } });
            

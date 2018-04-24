@@ -20,8 +20,7 @@
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">@ViewBag.Name<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-
-                        <li><a asp-area="" asp-controller="Event" asp-action="Index">Events</a></li>
+                        <li><a asp-area="" asp-controller="Event" asp-action="Index" asp-route-studentID="@ViewBag.ID">Events</a></li>
                         <li><a asp-area="" asp-controller="File" asp-action="index" asp-route-studentID="@ViewBag.ID">Files</a></li>
                         <li><a asp-area="" asp-controller="User" asp-action="login">Logout</a></li>
 

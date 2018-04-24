@@ -33,11 +33,7 @@ namespace SchoolRepo.Controllers
             //fetch files for matching studentID and also include student object
             List<Models.File> files = context.Files.Where(f=>f.StudentID == studentID).Include(s=>s.Students).ToList();
 
-            //onl query if file already uploaded
-            if(files.Count != 0)
-            {
-                Models.File file = files.Find(s => s.StudentID == studentID);
-            }
+          
             User user = context.Users.Single(s => s.ID == studentID);
             ViewBag.Name = user.Name;  //user name
             ViewBag.ID = studentID; //user ID

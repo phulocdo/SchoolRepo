@@ -11,6 +11,7 @@ namespace SchoolRepo.Controllers
 {
     public class GradeController : Controller
     {
+        //context to access object stored in the database
         private RepoDBContext context;
 
         public GradeController(RepoDBContext dBContext)
@@ -20,7 +21,7 @@ namespace SchoolRepo.Controllers
 
         public IActionResult Index()
         {
-
+            //list of grade
             List<Grade> grade = context.Grades.ToList();
 
             return View(grade);
@@ -35,21 +36,21 @@ namespace SchoolRepo.Controllers
         [HttpPost]
         public IActionResult Add(GradeViewModels gradeViewModel)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid) //if form validation is valid,then
             {
-
+                //instantiate a grade object
                 Grade grade = new Grade
                 {
                     ID = gradeViewModel.ID,
                     Level = gradeViewModel.Level,
                     
                 };
-                context.Grades.Add(grade);
+                context.Grades.Add(grade); //save context to the database
                 context.SaveChanges();
 
                 return Redirect("Index");
             }
-            return View(gradeViewModel);
+            return View(gradeViewModel); //if model state failed, prompt the add grade form
         }
     }
 }
