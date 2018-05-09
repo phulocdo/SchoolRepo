@@ -1,0 +1,48 @@
+
+
+
+show router bgp neighbor
+show router route-table
+show router fib <slot>
+show router bgp route <prefix> hunt ##RIB-IN/RIB-OUT
+show router bgp next-hop
+show router interface system
+show router bgp
+show route bgp routes <prefix> detail
+show route bgp summary
+show route policy
+show route bgp neighbor <ip> advertised-routes
+show route bgp group <name>
+
+
+
+A:BGP_POD1_R5>config>router>bgp# info
+----------------------------------------------
+ group "IBGP"
+	description "AS 65540 IBGP mesh"
+	type internal
+	peer-as 65540
+	neighbor 10.16.10.1
+		description "BGP_POD1_R1"
+ 	exit
+	neighbor 10.16.10.2
+		description "BGP_POD2_R2"
+	exit
+	neighbor 10.16.10.6
+		description "BGP_POD2_R6"
+	exit
+ exit
+
+ group "EBGP"
+	description "EBGP to AS 65540"
+	loop-detect discard-route
+	type external
+	import "Bad Import Nets" "AS65550 LP Policy"
+	export "Block Bad Nets" "advertise aggregate“
+		"AS65550 CIDR Policy" "AS65550 Client Externals"
+	peer-as 65540
+	neighbor 10.0.2.1
+	description "BGP_POD1_R1"
+exit
+
+

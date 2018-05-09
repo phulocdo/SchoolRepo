@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SchoolRepo.Data;
@@ -19,25 +20,34 @@ namespace SchoolRepo.Controllers
             context = dbContext;
         }
 
-        public IActionResult Index(int studentID)
+        public IActionResult Index()
         {
-            if(studentID != 0)
+            
+
+            string name = HttpContext.Session.GetString("UserName");
+
+            if(name != null)
             {
-                User user = context.Users.Single(s => s.ID == studentID);
-                ViewBag.Name = user.Name;
-                Grade grade = context.Grades.First(g => g.Level == user.Grade);
-                ViewBag.gradeID = grade.ID;
-                ViewBag.ID = studentID;
+                int id = (int)HttpContext.Session.GetInt32("UserID");
+                string grade = HttpContext.Session.GetString("UserGrade");
+                Grade grades = context.Grades.First(g => g.Level == grade);
+                ViewBag.gradeID = grades.ID;
+                ViewBag.ID = id;
             }
             
+
+            ViewBag.Name = name;
 
             return View();
         }
 
         public IActionResult Add()
         {
-            List<Grade> grade = context.Grades.ToList();
-            return View(new EventViewModels(grade));
+            ViewBag.Name = HttpContext.Session.GetString("UserName");
+            ViewBag.Grade = HttpContext.Session.GetString("UserGrade");
+
+            List<Grade> grades = context.Grades.ToList();
+            return View(new EventViewModels(grades));
         }
 
         [HttpPost]
@@ -46,21 +56,26 @@ namespace SchoolRepo.Controllers
             if (ModelState.IsValid) //if validation is OK
             {
                 //Fetch a single grade object where ID == select ID
-                Grade grade = context.Grades.Single(g=>g.ID == eventViewModels.EventID);
+                Grade grades = context.Grades.Single(g=>g.ID == eventViewModels.EventID);
 
                 Event events = new Event  //Create an event instance
                 {
                     Title = eventViewModels.Title,
                     Start = eventViewModels.Start,
                     End = eventViewModels.End,
-                    Grade = grade,
+                    Grade = grades,
                
                 };
 
                 context.Events.Add(events); //add context  and save to the database
                 context.SaveChanges();
 
+                //string name = HttpContext.Request.Query["name"].ToString();
+                //string grade = HttpContext.Request.Query["grade"].ToString();
+
                 return Redirect("Index");
+
+              
 
             }
             return View(eventViewModels); // if failed validation, reprompt the Add event form
@@ -68,10 +83,12 @@ namespace SchoolRepo.Controllers
 
         public IActionResult PostEvent(int grade)
         {
+            string userGrade = HttpContext.Session.GetString("UserGrade");
+            
             var events = context.Events.ToList();
 
 
-            if (grade != 0)
+            if (grade != 0 && userGrade != "Teacher")
             {
                 events = context.Events.Where(s => s.GradeID == grade).ToList();
             }

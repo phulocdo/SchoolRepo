@@ -1,0 +1,45 @@
+
+
+ECMP is a routing technique for routing packets along multiple paths
+of equal cost.
+
+A:R1# configure router ecmp ?
+- ecmp <max-ecmp-routes>
+- no ecmp
+<max-ecmp-routes> : [0..16]
+
+
+
+
+=======================
+BFD is a network protocol intended to provide a lightweight, lowoverhead,
+short-duration detection of failures in the path between
+two systems.
+
+
+
+bfd <transmit-interval>[receive<receive-interval>][multiplier<multiplier>]
+
+configure router
+interface “to-R2"
+address 10.1.2.1/24
+port 1/1/1
+bfd [100..100000]* receive [100..100000]* multiplier [3..20]
+
+
+
+
+configure router ospf
+area 0.0.0.0
+interface "system"
+exit
+interface “to-R1“
+enable-bfd
+exit
+
+
+
+Config router static-route 10.10.1.10/32 next-hop 10.1.1.2 bfd enable
+
+show router bfd session
+

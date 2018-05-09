@@ -27,22 +27,39 @@ namespace SchoolRepo.Controllers
             context = dbContext;
             environment = hostingEnvironment;
         }
-        public IActionResult Index(int studentID)
-        {
-            
-            //fetch files for matching studentID and also include student object
-            List<Models.File> files = context.Files.Where(f=>f.StudentID == studentID).Include(s=>s.Students).ToList();
 
-          
-            User user = context.Users.Single(s => s.ID == studentID);
-            ViewBag.Name = user.Name;  //user name
-            ViewBag.ID = studentID; //user ID
+        public IActionResult Index()
+        {
+            //ViewBag.Name = HttpContext.Request.Query["name"].ToString();
+            //ViewBag.Grade = HttpContext.Request.Query["grade"].ToString();
+            
+            string name = HttpContext.Session.GetString("UserName");
+            string grade = HttpContext.Session.GetString("UserGrade");
+            var files = context.Files.ToList();
+
+            if (name != null)
+            {
+                int id = (int)HttpContext.Session.GetInt32("UserID");
+                if (grade != "Teacher")
+                {
+                    
+                    files = context.Files.Where(f => f.StudentID == id).Include(s => s.Students).ToList();
+                }
+                
+                ViewBag.ID = id; //user ID
+                ViewBag.Name = name;
+                ViewBag.Grade = grade;
+            }
+            
 
             return View(files);
         }
 
         public IActionResult Upload()
         {
+            ViewBag.Name = HttpContext.Session.GetString("UserName");
+            ViewBag.Grade = HttpContext.Session.GetString("UserGrade");
+            
             //drop down list of students
             List<Student> studentList = context.Students.ToList();
 
@@ -138,7 +155,11 @@ namespace SchoolRepo.Controllers
 
         public IActionResult Remove()
         {
+            ViewBag.Name = HttpContext.Session.GetString("UserName");
+            ViewBag.Grade = HttpContext.Session.GetString("UserGrade");
+
             List<Models.File> files = context.Files.ToList();
+
             return View(files);
         }
 
@@ -155,10 +176,11 @@ namespace SchoolRepo.Controllers
             }
             context.SaveChanges();
 
+            
             return Redirect("Index");
         }
 
-        //remove files from the database
+        //remove files from the database server
         private void DeleteFile(string path)
         {
             System.IO.File.Delete(path);

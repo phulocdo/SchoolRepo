@@ -16,27 +16,49 @@
 
         @if (ViewBag.Name != null)
         {
-            <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">@ViewBag.Name<span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a asp-area="" asp-controller="Event" asp-action="Index" asp-route-studentID="@ViewBag.ID">Events</a></li>
-                        <li><a asp-area="" asp-controller="File" asp-action="index" asp-route-studentID="@ViewBag.ID">Files</a></li>
-                        <li><a asp-area="" asp-controller="User" asp-action="login">Logout</a></li>
+            @if (ViewBag.Grade == "Teacher")
+            {
+                <!--Teacher Menu-->
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">@ViewBag.Name<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            "
+                            <li><a asp-controller="Student" asp-action="Add">Add Students</a></li>
+                            <li><a asp-controller="File" asp-action="Upload">Upload Files</a></li>
+                            <li><a asp-controller="Event" asp-action="add">Post Events</a></li>
+                            <li><a asp-controller="File" asp-action="Remove">Delete Files</a></li>
+                            <li><a asp-controller="Student" asp-action="Remove">Delete Students</a></li>
+                            <li><a asp-controller="Teacher" asp-action="Index">Home</a></li>
+                            <li><a asp-area="" asp-controller="User" asp-action="logout">Logout</a></li>
 
-                    </ul>
-                </li>
-            </ul>
-        }
-        else
-        {
+                        </ul>
+                    </li>
+                </ul>
+
+            }else{
+                <!--Student Menu-->
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">@ViewBag.Name<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a asp-area="" asp-controller="Event" asp-action="Index">Events</a></li>
+                            <li><a asp-area="" asp-controller="File" asp-action="index">Files</a></li>
+                            <li><a asp-area="" asp-controller="User" asp-action="index">Home</a></li>
+                            <li><a asp-area="" asp-controller="User" asp-action="logout">Logout</a></li>
+
+                        </ul>
+                    </li>
+                </ul>
+
+             }
+
+         }else{
             <ul class="nav navbar-nav navbar-right">
                 <li><a asp-area="" asp-controller="User" asp-action="Login">Login</a></li>
                 <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                 <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
             </ul>
-
-
         }
     </div>
 </nav>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SchoolRepo.Data;
 using SchoolRepo.Models;
@@ -21,11 +22,16 @@ namespace SchoolRepo.Controllers
             context = dbContext;
         }
         
-        public IActionResult Index(int studentID)
+        public IActionResult Index()
         {
-            User student = context.Users.Single(s => s.ID == studentID);
-            ViewBag.Name = student.Name;
-            ViewBag.ID = studentID;
+            string name = HttpContext.Session.GetString("UserName");
+
+            if(name != null)
+            {
+                ViewBag.ID = (int)HttpContext.Session.GetInt32("UserID");
+                ViewBag.Name = name;
+                
+            }
 
             return View();
         }
@@ -66,7 +72,9 @@ namespace SchoolRepo.Controllers
                     context.Users.Add(user);
                     context.SaveChanges();
 
-                    return Redirect("Index?studentID=" + signUpViewModels.ID);
+                    //return Redirect("Index?studentID=" + signUpViewModels.ID);
+
+                    return Redirect("Index");
                 }
 
             }
@@ -103,10 +111,45 @@ namespace SchoolRepo.Controllers
                     return View(loginViewModels);
                 }
 
-                return Redirect("Index?studentID=" + loginViewModels.ID);
+                if (user.Grade.Equals("Teacher"))
+                {
+                    Access access = context.Accesses.Find(loginViewModels.ID);
+                    //account does not exist, redirect to login page
+                    if (user == null)
+                    {
+                        ModelState.AddModelError("ID", "Invalid access code");
+                        return View(loginViewModels);
+                    }
+
+                    HttpContext.Session.SetString("UserName", user.Name);
+                    HttpContext.Session.SetInt32("UserID", loginViewModels.ID);
+                    HttpContext.Session.SetString("UserGrade", user.Grade);
+
+                    return Redirect("/Teacher/Index");
+
+                   // return Redirect("/Teacher/Index?name=" + user.Name + "&grade=" + user.Grade);
+
+                }
+
+                HttpContext.Session.SetString("UserName", user.Name);
+                HttpContext.Session.SetInt32("UserID", loginViewModels.ID);
+                HttpContext.Session.SetString("UserGrade", user.Grade);
+
+
+                return Redirect("Index");
+
+               // return Redirect("Index?studentID=" + loginViewModels.ID);
             }
 
             return View(loginViewModels);
+        }
+
+        public IActionResult Logout()
+        {
+            //clear all entries from the current session
+            HttpContext.Session.Clear();
+
+            return View("Login");
         }
 
 

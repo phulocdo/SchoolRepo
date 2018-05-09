@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SchoolRepo.Data;
 using SchoolRepo.Models;
@@ -18,9 +19,13 @@ namespace SchoolRepo.Controllers
         public StudentController(RepoDBContext dbContext)
         {
             context = dbContext;
+            
         }
-        public IActionResult Index()
+        public IActionResult Index(string name, string grade)
         {
+
+            ViewBag.Name = HttpContext.Session.GetString("UserName");
+            ViewBag.Grade = HttpContext.Session.GetString("UserGrade");
             List<Student> student = context.Students.ToList();
 
             return View(student);
@@ -28,6 +33,10 @@ namespace SchoolRepo.Controllers
 
         public IActionResult Add()
         {
+            ViewBag.Name = HttpContext.Session.GetString("UserName");
+            ViewBag.Grade = HttpContext.Session.GetString("UserGrade");
+            //ViewBag.ID = HttpContext.Session.GetString("UserID");
+
             AddStudentViewModels addStudentViewModels = new AddStudentViewModels();
 
             return View(addStudentViewModels);
@@ -46,16 +55,19 @@ namespace SchoolRepo.Controllers
                 context.Students.Add(student);
                 context.SaveChanges();
 
-
+                
                 return Redirect("Index");
             }
 
             return View(addStudentViewModels);
         }
 
-        public IActionResult Remove()
+        public IActionResult Remove(string name, string grade)
         {
+            ViewBag.Name = HttpContext.Session.GetString("UserName");
+            ViewBag.Grade = HttpContext.Session.GetString("UserGrade");
             List<Student> student = context.Students.ToList();
+
             return View(student);
         }
 
@@ -70,6 +82,7 @@ namespace SchoolRepo.Controllers
             }
             context.SaveChanges();
 
+           
             return Redirect("Index");
         }
             

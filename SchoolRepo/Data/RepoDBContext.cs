@@ -14,6 +14,7 @@ namespace SchoolRepo.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<Grade> Grades { get; set; }
+        public DbSet<Access> Accesses { get; set; }
 
         public RepoDBContext(DbContextOptions<RepoDBContext> dbContextOptions)
             : base(dbContextOptions)

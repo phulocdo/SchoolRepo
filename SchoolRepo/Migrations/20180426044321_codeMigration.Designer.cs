@@ -11,9 +11,10 @@ using System;
 namespace SchoolRepo.Migrations
 {
     [DbContext(typeof(RepoDBContext))]
-    partial class RepoDBContextModelSnapshot : ModelSnapshot
+    [Migration("20180426044321_codeMigration")]
+    partial class codeMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
