@@ -1,0 +1,288 @@
+#--------------------------------------------------
+echo "Filter Configuration"
+#--------------------------------------------------
+    filter 
+        ip-filter 1 create
+            entry 10 create
+                description "Allow Un-Trusted WiFi Access From ALL APs, if UDP Port Is Correct" 
+                match protocol udp
+                    dst-ip ip-prefix-list "CA1PDG0-SWu"
+                    dst-port port-list "ipsec"
+                exit 
+                action forward
+            exit 
+            entry 20 create
+                description "Allow IPSec-ESP Data Traffic ToBe Forwarded" 
+                match protocol 50
+                    dst-ip ip-prefix-list "CA1PDG0-SWu"
+                exit 
+                action forward
+            exit 
+            entry 30 create
+                description "Allow eBGP Peering On the to-CA1WGR01-SWu-1 Interface" 
+                match protocol tcp
+                    dst-ip 10.128.48.170/30
+                    src-ip 10.128.48.169/30
+                    port eq 179
+                exit 
+                action forward
+            exit 
+            entry 40 create
+                description "Allow eBGP Peering On the to-CA1WGR02-SWu-2 Interface" 
+                match protocol tcp
+                    dst-ip 10.128.49.170/30
+                    src-ip 10.128.49.169/30
+                    port eq 179
+                exit 
+                action forward
+            exit 
+            entry 50 create
+                description "Allow ICMP Replies On eBGP Interface to-CA1WGR01-SWu-1" 
+                match protocol icmp
+                    dst-ip 10.128.48.170/30
+                exit 
+                action forward
+            exit 
+            entry 51 create
+                description "Allow ICMP Replies On eBGP Interface to-CA1WGR02-SWu-2" 
+                match protocol icmp
+                    dst-ip 10.128.49.170/30
+                exit 
+                action forward
+            exit 
+            entry 52 create
+                description "Allow ICMP Replies On the SWu Virtual IP From eBGP Neighbors" 
+                match protocol icmp
+                    dst-ip ip-prefix-list "CA1PDG0-SWu"
+                    src-ip ip-prefix-list "CA1WGR0102-eBGP"
+                exit 
+                action forward
+            exit 
+            entry 999 create
+                description "A Catch-All DENY" 
+                log 104
+            exit 
+        exit 
+        ip-filter 2 create
+            description "S2b-Security-Filter" 
+            entry 10 create
+                description "Allow GTP-C pkts between S2b And Any host" 
+                match protocol udp
+                    dst-ip 10.128.49.249/32
+                    src-port eq 2123
+                exit 
+                action forward
+            exit 
+            entry 20 create
+                description "Allow GTP-U pkts between S2b And Any host" 
+                match protocol udp
+                    dst-ip 10.128.49.249/32
+                    src-port eq 2152
+                exit 
+                action forward
+            exit 
+            entry 30 create
+                description "Allow GTP-C pkts between S2b And Any host" 
+                match protocol udp
+                    dst-ip 10.128.49.249/32
+                    dst-port eq 2123
+                exit 
+                action forward
+            exit 
+            entry 40 create
+                description "Allow GTP-U pkts between S2b And Any host" 
+                match protocol udp
+                    dst-ip 10.128.49.249/32
+                    dst-port eq 2152
+                exit 
+                action forward
+            exit 
+            entry 50 create
+                description "Allow OSPF traffic" 
+                match protocol ospf-igp
+                exit 
+                action forward
+            exit 
+            entry 60 create
+                description "Allow BFD pkts between S2b And MX3" 
+                match protocol udp
+                    dst-ip 10.128.48.26/32
+                    dst-port eq 3784
+                    src-ip 10.128.48.25/32
+                exit 
+                action forward
+            exit 
+            entry 70 create
+                description "Allow BFD-Control pkts between S2b And MX3" 
+                match protocol udp
+                    dst-ip 10.128.48.26/32
+                    dst-port eq 3785
+                    src-ip 10.128.48.25/32
+                exit 
+                action forward
+            exit 
+            entry 80 create
+                description "Allow BFD pkts between S2b And MX4" 
+                match protocol udp
+                    dst-ip 10.128.49.26/32
+                    dst-port eq 3784
+                    src-ip 10.128.49.25/32
+                exit 
+                action forward
+            exit 
+            entry 90 create
+                description "Allow BFD-Control pkts between S2b And MX4" 
+                match protocol udp
+                    dst-ip 10.128.49.26/32
+                    dst-port eq 3785
+                    src-ip 10.128.49.25/32
+                exit 
+                action forward
+            exit 
+            entry 100 create
+                description "A Catch-All DENY" 
+                log 104
+            exit 
+        exit 
+        ip-filter 3 create
+            description "SWm-Security-Filter" 
+            entry 10 create
+                description "Allow Diameter pkts between SWm And Any host" 
+                match protocol tcp
+                    dst-ip 10.250.36.126/32
+                    src-port eq 3868
+                exit 
+                action forward
+            exit 
+            entry 20 create
+                description "Allow DNS pkts between SWm And Any host" 
+                match protocol udp
+                    dst-ip 10.250.36.126/32
+                    src-port eq 53
+                exit 
+                action forward
+            exit 
+            entry 30 create
+                description "Allow DNS pkts between SWm And Any host" 
+                match protocol tcp
+                    dst-ip 10.250.36.126/32
+                    src-port eq 53
+                exit 
+                action forward
+            exit 
+            entry 40 create
+                description "Allow OSPF traffic" 
+                match protocol ospf-igp
+                exit 
+                action forward
+            exit 
+            entry 50 create
+                description "Allow BFD pkts between SWm And MX3" 
+                match protocol udp
+                    dst-ip 10.250.32.106/32
+                    dst-port eq 3784
+                    src-ip 10.250.32.105/32
+                exit 
+                action forward
+            exit 
+            entry 60 create
+                description "Allow BFD-Control pkts between SWm And MX3" 
+                match protocol udp
+                    dst-ip 10.250.32.106/32
+                    dst-port eq 3785
+                    src-ip 10.250.32.105/32
+                exit 
+                action forward
+            exit 
+            entry 70 create
+                description "Allow BFD pkts between SWm And MX4" 
+                match protocol udp
+                    dst-port eq 3784
+                    src-ip 10.250.36.105/32
+                exit 
+                action forward
+            exit 
+            entry 80 create
+                description "Allow BFD-Control pkts between SWm And MX4" 
+                match protocol udp
+                    dst-ip 10.250.36.106/32
+                    dst-port eq 3785
+                    src-ip 10.250.36.105/32
+                exit 
+                action forward
+            exit 
+            entry 90 create
+                description "A Catch-All DENY" 
+                log 104
+            exit 
+        exit 
+        ip-filter 4 create
+            description "NTP-Security-Filter" 
+            entry 10 create
+                description "Allow NTP pkts between NTP VIP And Servers" 
+                match protocol udp
+                    dst-ip 10.250.36.127/32
+                    dst-port eq 123
+                    src-ip 10.250.47.178/32
+                exit 
+                action forward
+            exit 
+            entry 20 create
+                description "Allow NTP pkts between NTP VIP And Servers" 
+                match protocol udp
+                    dst-ip 10.250.36.127/32
+                    dst-port eq 123
+                    src-ip 10.250.45.130/32
+                exit 
+                action forward
+            exit 
+            entry 30 create
+                description "Allow NTP pkts between NTP VIP And Servers" 
+                match protocol udp
+                    dst-ip 10.250.36.127/32
+                    dst-port eq 123
+                    src-ip 10.250.47.146/32
+                exit 
+                action forward
+            exit 
+            entry 40 create
+                description "Allow NTP pkts between NTP VIP And Servers" 
+                match protocol udp
+                    dst-ip 10.250.36.127/32
+                    dst-port eq 123
+                    src-ip 10.250.45.18/32
+                exit 
+                action forward
+            exit 
+            entry 50 create
+                description "Allow NTP pkts between NTP VIP And Servers" 
+                match protocol udp
+                    dst-ip 10.250.36.127/32
+                    dst-port eq 123
+                    src-ip 10.250.47.162/32
+                exit 
+                action forward
+            exit 
+            entry 60 create
+                description "Allow NTP pkts between NTP VIP And Servers" 
+                match protocol udp
+                    dst-ip 10.250.36.127/32
+                    dst-port eq 123
+                    src-ip 10.250.45.2/32
+                exit 
+                action forward
+            exit 
+            entry 80 create
+                description "Deny Any Other NTP Traffic" 
+                match protocol udp
+                    dst-port eq 123
+                exit 
+                log 104
+                action drop
+            exit 
+            entry 90 create
+                description "Permit ALL" 
+                action forward
+            exit 
+        exit 
+    exit 

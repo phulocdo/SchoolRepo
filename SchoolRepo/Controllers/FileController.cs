@@ -14,13 +14,14 @@ using SchoolRepo.ViewModels;
 
 namespace SchoolRepo.Controllers
 {
-    public class FileController : Controller
+    public class FileController : Controller,ISession
     {
         //environment where files will be upload
         private IHostingEnvironment environment;
 
         //context to access object stored in the database
         private RepoDBContext context;
+
         //MVC will create dbcontext and hand it to the controller's constructor
         public FileController(RepoDBContext dbContext, IHostingEnvironment hostingEnvironment)
         {
@@ -30,11 +31,9 @@ namespace SchoolRepo.Controllers
 
         public IActionResult Index()
         {
-            //ViewBag.Name = HttpContext.Request.Query["name"].ToString();
-            //ViewBag.Grade = HttpContext.Request.Query["grade"].ToString();
             
-            string name = HttpContext.Session.GetString("UserName");
-            string grade = HttpContext.Session.GetString("UserGrade");
+            string name = GetName(); //user Name
+            string grade = GetGrade(); //user Grade level
             var files = context.Files.ToList();
 
             if (name != null)
@@ -57,8 +56,8 @@ namespace SchoolRepo.Controllers
 
         public IActionResult Upload()
         {
-            ViewBag.Name = HttpContext.Session.GetString("UserName");
-            ViewBag.Grade = HttpContext.Session.GetString("UserGrade");
+            ViewBag.Name = GetName(); //user name
+            ViewBag.Grade = GetGrade();//user grade level
             
             //drop down list of students
             List<Student> studentList = context.Students.ToList();
@@ -103,7 +102,12 @@ namespace SchoolRepo.Controllers
                 return Redirect("Index");
             }
 
-            return View(addFileViewModels);
+            List<Student> studentList = context.Students.ToList();
+            ViewBag.Name = GetName(); //user name
+            ViewBag.Grade = GetGrade();//user grade level
+
+            return View(new AddFileViewModels(studentList));
+
         }
 
         public async Task<IActionResult> Download(string filename)
@@ -135,6 +139,7 @@ namespace SchoolRepo.Controllers
             return types[ext];
         }
 
+        //list of support files type
         private Dictionary<string, string> GetTypes()
         {
             return new Dictionary<string, string>
@@ -155,8 +160,8 @@ namespace SchoolRepo.Controllers
 
         public IActionResult Remove()
         {
-            ViewBag.Name = HttpContext.Session.GetString("UserName");
-            ViewBag.Grade = HttpContext.Session.GetString("UserGrade");
+            ViewBag.Name = GetName();//user name
+            ViewBag.Grade = GetGrade();//user grade level
 
             List<Models.File> files = context.Files.ToList();
 
@@ -184,6 +189,24 @@ namespace SchoolRepo.Controllers
         private void DeleteFile(string path)
         {
             System.IO.File.Delete(path);
+        }
+
+        //Return user name
+        public string GetName()
+        {
+            return HttpContext.Session.GetString("UserName");
+        }
+
+        //return user grade level
+        public string GetGrade()
+        {
+            return HttpContext.Session.GetString("UserGrade");
+        }
+
+        //return user ID
+        public int GetID()
+        {
+            return (int)HttpContext.Session.GetInt32("UserID");
         }
 
     }

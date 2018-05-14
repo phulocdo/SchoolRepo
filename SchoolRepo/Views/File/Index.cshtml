@@ -4,6 +4,14 @@
 }
 
 <h1>Files</h1>
+@if(ViewBag.Grade == "Teacher")
+{
+<p>
+    <a asp-controller="File" asp-action="Upload">Upload</a> | <a asp-controller="File" asp-action="Remove">Delete</a>
+</p>
+
+}
+
 
 @if(Model.Count == 0)
 {

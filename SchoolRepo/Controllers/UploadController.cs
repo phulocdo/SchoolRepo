@@ -12,6 +12,8 @@ namespace SchoolRepo.Controllers
 {
     public class UploadController : Controller
     {
+
+        //web hostting environment where an application is running in
         private IHostingEnvironment _environment;
 
         public UploadController(IHostingEnvironment environment)
@@ -26,13 +28,16 @@ namespace SchoolRepo.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(ICollection<IFormFile> files)
         {
+            //upload path
             var uploads = Path.Combine(_environment.WebRootPath, "uploads");
             foreach (var file in files)
             {
                 if (file.Length > 0)
                 {
+                    //initialize file stream with upload path and file mode
                     using (var fileStream = new FileStream(Path.Combine(uploads, file.FileName), FileMode.Create))
                     {
+                        //copy the content of the upload file to the target stream
                         await file.CopyToAsync(fileStream);
                     }
                 }

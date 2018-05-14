@@ -10,7 +10,7 @@ using SchoolRepo.ViewModels;
 
 namespace SchoolRepo.Controllers
 {
-    public class StudentController : Controller
+    public class StudentController : Controller, ISession
     {
         //mechanism with which we interact with object store in database
         private static RepoDBContext context;
@@ -24,8 +24,8 @@ namespace SchoolRepo.Controllers
         public IActionResult Index(string name, string grade)
         {
 
-            ViewBag.Name = HttpContext.Session.GetString("UserName");
-            ViewBag.Grade = HttpContext.Session.GetString("UserGrade");
+            ViewBag.Name = GetName();//user name
+            ViewBag.Grade = GetGrade();//user grade
             List<Student> student = context.Students.ToList();
 
             return View(student);
@@ -33,10 +33,9 @@ namespace SchoolRepo.Controllers
 
         public IActionResult Add()
         {
-            ViewBag.Name = HttpContext.Session.GetString("UserName");
-            ViewBag.Grade = HttpContext.Session.GetString("UserGrade");
-            //ViewBag.ID = HttpContext.Session.GetString("UserID");
-
+           
+            ViewBag.Name = GetName();//user name
+            ViewBag.Grade = GetGrade();//user grade
             AddStudentViewModels addStudentViewModels = new AddStudentViewModels();
 
             return View(addStudentViewModels);
@@ -45,7 +44,7 @@ namespace SchoolRepo.Controllers
         [HttpPost]
         public IActionResult Add(AddStudentViewModels addStudentViewModels)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid) //if model validation if valid, add object to the database
             {
                 Student student = new Student
                 {
@@ -59,19 +58,22 @@ namespace SchoolRepo.Controllers
                 return Redirect("Index");
             }
 
+           ViewBag.Name = GetName(); //user name
+           ViewBag.Grade = GetGrade(); //user grade
+
             return View(addStudentViewModels);
         }
 
         public IActionResult Remove(string name, string grade)
         {
-            ViewBag.Name = HttpContext.Session.GetString("UserName");
-            ViewBag.Grade = HttpContext.Session.GetString("UserGrade");
+            ViewBag.Name = GetName();//user name
+            ViewBag.Grade = GetGrade();//user grade
             List<Student> student = context.Students.ToList();
 
             return View(student);
         }
 
-        //delete student/students from the database
+        //delete student(s) from the database
         [HttpPost]
         public IActionResult Remove(int[] studentIDs)
         {
@@ -85,7 +87,24 @@ namespace SchoolRepo.Controllers
            
             return Redirect("Index");
         }
-            
+
+        //Return user name
+        public string GetName()
+        {
+            return HttpContext.Session.GetString("UserName");
+        }
+
+        //return user grade level
+        public string GetGrade()
+        {
+            return HttpContext.Session.GetString("UserGrade");
+        }
+
+        //return user ID
+        public int GetID()
+        {
+            return (int)HttpContext.Session.GetInt32("UserID");
+        }
 
     }
 }

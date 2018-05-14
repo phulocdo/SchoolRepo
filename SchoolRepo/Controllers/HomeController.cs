@@ -12,6 +12,7 @@ namespace SchoolRepo.Controllers
 {
     public class HomeController : Controller
     {
+        //context to access object stored in the database
         private RepoDBContext contex;
 
         public HomeController(RepoDBContext dBContext)

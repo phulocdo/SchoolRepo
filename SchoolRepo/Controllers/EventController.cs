@@ -11,10 +11,13 @@ using SchoolRepo.ViewModels;
 
 namespace SchoolRepo.Controllers
 {
-    public class EventController : Controller
+    public class EventController : Controller, ISession
     {
+
+        //context to access object stored in the data base
         private readonly RepoDBContext context;
 
+        //MVC will initiate dbContext and  hand control to the constructor
         public EventController(RepoDBContext dbContext)
         {
             context = dbContext;
@@ -24,15 +27,16 @@ namespace SchoolRepo.Controllers
         {
             
 
-            string name = HttpContext.Session.GetString("UserName");
+            string name = GetName(); //user name
+            string grade = GetGrade();
 
-            if(name != null)
+            if (name != null)
             {
-                int id = (int)HttpContext.Session.GetInt32("UserID");
-                string grade = HttpContext.Session.GetString("UserGrade");
-                Grade grades = context.Grades.First(g => g.Level == grade);
-                ViewBag.gradeID = grades.ID;
-                ViewBag.ID = id;
+                //int id = GetID();
+                Grade level = context.Grades.First(g => g.Level == grade);
+                ViewBag.gradeID = level.ID;
+                ViewBag.ID = GetID();
+                ViewBag.Grade = GetGrade();
             }
             
 
@@ -43,13 +47,13 @@ namespace SchoolRepo.Controllers
 
         public IActionResult Add()
         {
-            ViewBag.Name = HttpContext.Session.GetString("UserName");
-            ViewBag.Grade = HttpContext.Session.GetString("UserGrade");
-
+            ViewBag.Name = GetName() ;//user name   
+            ViewBag.Grade = GetGrade(); //user grade
             List<Grade> grades = context.Grades.ToList();
+
             return View(new EventViewModels(grades));
         }
-
+        
         [HttpPost]
         public IActionResult Add(EventViewModels eventViewModels)
         {
@@ -70,20 +74,17 @@ namespace SchoolRepo.Controllers
                 context.Events.Add(events); //add context  and save to the database
                 context.SaveChanges();
 
-                //string name = HttpContext.Request.Query["name"].ToString();
-                //string grade = HttpContext.Request.Query["grade"].ToString();
-
                 return Redirect("Index");
 
-              
-
             }
-            return View(eventViewModels); // if failed validation, reprompt the Add event form
+            List<Grade> grad = context.Grades.ToList();
+
+            return View(new EventViewModels(grad)); // if failed validation, reprompt the Add event form
         }
 
         public IActionResult PostEvent(int grade)
         {
-            string userGrade = HttpContext.Session.GetString("UserGrade");
+            string userGrade = GetGrade(); //grade level
             
             var events = context.Events.ToList();
 
@@ -99,6 +100,24 @@ namespace SchoolRepo.Controllers
 
             return new JsonResult(events);
             
+        }
+
+        //Return user name
+        public string GetName()
+        {
+            return HttpContext.Session.GetString("UserName");
+        }
+
+        //return user grade level
+        public string GetGrade()
+        {
+            return HttpContext.Session.GetString("UserGrade");
+        }
+
+        //return user ID
+        public int GetID()
+        {
+            return (int)HttpContext.Session.GetInt32("UserID");
         }
 
     }

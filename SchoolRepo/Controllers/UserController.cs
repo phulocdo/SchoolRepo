@@ -11,11 +11,12 @@ using SchoolRepo.ViewModels;
 
 namespace SchoolRepo.Controllers
 {
-    public class UserController : Controller
+    public class UserController : Controller, ISession
     {
         //context to access object stored in the database
         private RepoDBContext context;
 
+       
         //MVC will create dbcontext and hand it to the controller's constructor
         public UserController(RepoDBContext dbContext)
         {
@@ -24,11 +25,11 @@ namespace SchoolRepo.Controllers
         
         public IActionResult Index()
         {
-            string name = HttpContext.Session.GetString("UserName");
+            string name = GetName();//user name
 
             if(name != null)
             {
-                ViewBag.ID = (int)HttpContext.Session.GetInt32("UserID");
+                ViewBag.ID = GetID() ;
                 ViewBag.Name = name;
                 
             }
@@ -45,17 +46,29 @@ namespace SchoolRepo.Controllers
         [HttpPost]
         public IActionResult SignUp(SignUpViewModels signUpViewModels)
         {
+            List<Grade> grades = context.Grades.ToList();
+
             if (ModelState.IsValid)
             {
                 //make sure Password and verifyPassword are the same
                 if (signUpViewModels.Password != signUpViewModels.VerifyPassword)
                 {
                     ModelState.AddModelError("VerifyPassword", "Password Mismatched!");
-                    return View(signUpViewModels);
+                    return View(new SignUpViewModels(grades));
                 }
                 else
                 {
-                    
+                    User id = context.Users.Find(signUpViewModels.ID);
+
+                    //veriry if user id is already in the DB
+                    if(id != null)
+                    {
+                        ModelState.AddModelError("ID", "User ID already exist!");
+                        return View(new SignUpViewModels(grades));
+                    }
+
+
+
                     Grade grade = context.Grades.Single(s => s.ID == signUpViewModels.StudentID);
                     User user = new User
                     {
@@ -64,7 +77,6 @@ namespace SchoolRepo.Controllers
                         Name = signUpViewModels.Name,
                         Password = DeriveSaltHashKey(signUpViewModels.Password),
                         Grade = grade.Level
-
                         
                     };
 
@@ -72,14 +84,15 @@ namespace SchoolRepo.Controllers
                     context.Users.Add(user);
                     context.SaveChanges();
 
-                    //return Redirect("Index?studentID=" + signUpViewModels.ID);
 
                     return Redirect("Index");
                 }
 
             }
 
-            return View(signUpViewModels);
+            
+
+            return View(new SignUpViewModels(grades));
         }
 
 
@@ -121,6 +134,7 @@ namespace SchoolRepo.Controllers
                         return View(loginViewModels);
                     }
 
+                    //manage user session data
                     HttpContext.Session.SetString("UserName", user.Name);
                     HttpContext.Session.SetInt32("UserID", loginViewModels.ID);
                     HttpContext.Session.SetString("UserGrade", user.Grade);
@@ -131,14 +145,12 @@ namespace SchoolRepo.Controllers
 
                 }
 
+                //user session
                 HttpContext.Session.SetString("UserName", user.Name);
                 HttpContext.Session.SetInt32("UserID", loginViewModels.ID);
                 HttpContext.Session.SetString("UserGrade", user.Grade);
 
-
                 return Redirect("Index");
-
-               // return Redirect("Index?studentID=" + loginViewModels.ID);
             }
 
             return View(loginViewModels);
@@ -197,6 +209,25 @@ namespace SchoolRepo.Controllers
             }
             
         }
+
+        //Return user name
+        public string GetName()
+        {
+            return HttpContext.Session.GetString("UserName");
+        }
+
+        //return user grade level
+        public string GetGrade()
+        {
+            return HttpContext.Session.GetString("UserGrade");
+        }
+
+        //return user ID
+        public int GetID()
+        {
+            return (int)HttpContext.Session.GetInt32("UserID");
+        }
+
     }
 
 }

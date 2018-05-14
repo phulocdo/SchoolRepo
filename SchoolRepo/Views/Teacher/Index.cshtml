@@ -3,14 +3,12 @@
     ViewData["Title"] = "View";
 }
 
-<h2>@ViewBag.Grade</h2>
+<h2>View</h2>
 
 <ul>
 
-    <li><a asp-controller="Student" asp-action="Add">Add Students</a></li>
-    <li><a asp-controller="File" asp-action="Upload">Upload Files</a></li>
-    <li><a asp-controller="Event" asp-action="add">Post Events</a></li>
-    <li><a asp-controller="File" asp-action="Remove">Delete Files</a></li>
-    <li><a asp-controller="Student" asp-action="Remove">Delete Students</a></li>
+    <li><a asp-controller="Student" asp-action="Index">Students</a></li>
+    <li><a asp-controller="File" asp-action="Index">Files</a></li>
+    <li><a asp-controller="Event" asp-action="Index">Events</a></li>
 
 </ul>

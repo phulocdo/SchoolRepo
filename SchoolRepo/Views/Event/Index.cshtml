@@ -3,8 +3,12 @@
     ViewData["Title"] = "Index";
 }
 
+@if(ViewBag.Grade == "Teacher")
+{
+    <p><a asp-controller="Event" asp-action="add">Post</a> | <a asp-controller="Event" asp-action="Remove">Delete</a></p>
 
-<h2>Events</h2>
+}
+<p></p>
 <div id="calendar"></div>
 
 

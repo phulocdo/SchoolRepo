@@ -1,0 +1,51 @@
+
+
+
+System Security Configuration – Setup Read-Only User Profile
+
+
+configure system security
+
+
+
+    profile "readonly"
+
+	default-action deny-all
+	entry 10
+		match "back"
+		action permit
+	exit
+	entry 20
+		match "exit"
+		action permit
+	exit
+	entry 30
+		match "help"
+		action permit
+	exit
+	entry 40
+		match "history"
+		action permit
+	exit
+	entry 50
+		match "logout"
+		action permit
+	exit
+	entry 60
+		match "ping"
+		action permit
+	exit
+	entry 70
+		match "traceroute"
+		action permit
+	exit
+	entry 80
+		match "monitor"
+		action permit
+	exit
+	entry 90
+		match "show"
+		action permit
+	exit
+	
+exit
