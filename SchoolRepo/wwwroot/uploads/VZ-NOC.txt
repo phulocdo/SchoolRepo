@@ -1,0 +1,43 @@
+What you’ll be doing...
+
+Customer satisfaction drives our business, and you’ll have a key role in ensuring that our customers remain happy by providing exceptional service and prompt responses to their needs. You’ll be responsible for supporting the 24x7 Floor Operations and Service Desk function for our managed network services customers, and ensuring Government Network Operations and Security Center (GNOSC) customers collaborate with our internal resources as appropriate. You’ll be part of an incredible team, having a positive impact on our business—here, where better matters. This role requires the incumbent to work 12 hour shifts. This is a shift position. Employees are assigned to shifts based on business needs and flexibility is required to cover all shifts as needed, including third shift.
+
+    Responding to customer inquiries and conducting network surveillance.
+    Initiating and resolving incident management tickets.
+    Examining physical layer and logical problems using standard isolation methodologies.
+    Utilizing tools for router access, circuit layout, automated circuit testing, and ticket management.
+    Analyzing network surveillance data and addressing any issues that were identified through the analytics.
+    Responsible for proactively monitoring 2700+ network devices at 860+ Client locations
+    Provide 2nd level technical support for the MST network, including troubleshooting voice, video and data (IP) traffic
+    Documentation of network problems in Remedy IR data base system
+    Monitoring and trouble-shooting DS0’s, T1’s, SIP, PIP, EVPL, DS3’s, OC3s, BRI-PRI (ISDN), FIOS, EVDO, DSLs, and B1 circuits
+    Responsible for engaging Cisco TAC and working through router related problems
+    Responsible for engaging support groups to aid in trouble diagnosis and repair
+    Responsible for sending text pages to personnel with outage information and updates
+    Responsible for running outage teleconference bridges effectively and professionally
+    Responsible for completing daily / nightly NCC check lists and turn over documents
+
+What we’re looking for...
+
+You have very strong technical skills and an ability to dig into the details to identify opportunities and solutions to root cause issues. Organization, reliability and time management skills come naturally to you, and you can troubleshoot highly technical issues and effectively explain complex details to non-technical customers. You are adept at utilizing a variety of tools at your disposal to solve problems and are resourceful in finding the most client-focused solutions.
+
+You’ll need to have:
+
+    Bachelor’s degree or four or more years of work experience.
+    Three or more years of relevant work experience.
+    Experience working in a NOC environment with Cisco or Juniper routers and LAN switches.
+    IPVPN, IP, MPLS, OSPF, EIGRP, BGP and IPSec networking protocol experience.
+
+Even better if you have:
+
+    A degree in a technical discipline.
+    Cisco CCNA and/or CCNP certification.
+    Network management and performance analysis tool experience.
+    Knowledge of DNS, NTP, Firewalls and ACLs.
+    ITIL experience.
+    Worked in an ISO operating environment.
+    Worked in environments operating under service level agreements.
+    Managed customer service requests.
+    Familiarity with IPv6.
+    Working knowledge of Cisco router products (2600, 2800, 3600, 3700, 3900, 5300, 7200, 7500, ASR).
+
